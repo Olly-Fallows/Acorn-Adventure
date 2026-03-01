@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://e3urqvsahg7s"]
+
+[ext_resource type="Texture2D" uid="uid://cu503w8evtkjo" path="res://icon.svg" id="1_qrja6"]
+[ext_resource type="Script" uid="uid://ody5wwdxm7kf" path="res://player.gd" id="2_co24e"]
+[ext_resource type="PackedScene" uid="uid://rdjgq07wlags" path="res://assets/models/entities/acorn.blend" id="3_feb8i"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_co24e"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_feb8i"]
+sky_material = SubResource("ProceduralSkyMaterial_co24e")
+
+[sub_resource type="Environment" id="Environment_kj3p2"]
+background_mode = 2
+sky = SubResource("Sky_feb8i")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_co24e"]
+albedo_texture = ExtResource("1_qrja6")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_feb8i"]
+material = SubResource("StandardMaterial3D_co24e")
+size = Vector2(30, 30)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kj3p2"]
+data = PackedVector3Array(15, 0, 15, -15, 0, 15, 15, 0, -15, -15, 0, 15, -15, 0, -15, 15, 0, -15)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ybq6y"]
+height = 1.6193848
+
+[node name="Node3D" type="Node3D" unique_id=1626955884]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1139503453]
+environment = SubResource("Environment_kj3p2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=856819822]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1530530225]
+mesh = SubResource("PlaneMesh_feb8i")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=162503354]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1108250235]
+shape = SubResource("ConcavePolygonShape3D_kj3p2")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1144027487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("2_co24e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1758857620]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16271973, 0)
+shape = SubResource("CapsuleShape3D_ybq6y")
+
+[node name="CameraPivot" type="Node3D" parent="CharacterBody3D" unique_id=1199896186]
+unique_name_in_owner = true
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CharacterBody3D/CameraPivot" unique_id=1515137815]
+spring_length = 5.0
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/CameraPivot/SpringArm3D" unique_id=1077734367]
+
+[node name="Model" parent="CharacterBody3D" unique_id=512138916 instance=ExtResource("3_feb8i")]
+unique_name_in_owner = true
